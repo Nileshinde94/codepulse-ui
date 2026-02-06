@@ -2,6 +2,7 @@ import { HttpClient, httpResource } from '@angular/common/http';
 import { inject, Injectable, InputSignal, signal } from '@angular/core';
 import { AddCategoryRequest, Category, UpdateCategoryRequest } from '../models/category.models';
 import { environment } from '../../../../environments/environment';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -46,6 +47,10 @@ export class CategoryService {
         this.updateCategoriesStatus.set('error');
       }
     });
+  }
+
+  deleteCategory(id: string):Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/api/Categories/${id}`);
   }
 }
 

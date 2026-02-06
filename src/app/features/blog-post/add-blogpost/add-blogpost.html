@@ -1,0 +1,47 @@
+<div class="container">
+    <h1 class="mt-3">Add Blog Posts</h1>
+
+    <form class="mt-3" [formGroup]="addblogpostForm" (ngSubmit)="[OnSubmit()]">
+        <div class="mb-3">
+            <label for="title" class="form-label">Title</label>
+            <input type="text" id="title" class="form-control" formControlName="title" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="shortDescription" class="form-label">Short Description</label>
+            <textarea id="shortDescription" class="form-control" formControlName="shortDescription" rows="5"
+                required></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label for="content" class="form-label">Content</label>
+            <textarea id="content" class="form-control" formControlName="content" rows="5" required></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label for="featuredImageUrl" class="form-label">Featured Image URL</label>
+            <input type="text" id="featuredImageUrl" class="form-control" formControlName="featuredImageUrl" required>
+        </div>
+        <div class="mb-3">
+            <label for="urlHandle" class="form-label">URL Handle</label>
+            <input type="text" id="urlHandle" class="form-control" formControlName="urlHandle" required>
+        </div>
+        <div class="mb-3">
+            <label for="publishDate" class="form-label">Publish Date</label>
+            <input type="date" id="publishDate" class="form-control" formControlName="publishDate" required>
+        </div>
+        <div class="mb-3">
+            <label for="author" class="form-label">Author</label>
+            <input type="text" id="author" class="form-control" formControlName="author" required>
+        </div>
+        <div class="mb-3">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="isVisible" formControlName="isVisible">
+                <label class="form-check-label" for="isVisible"> Is Visible? </label>
+            </div>
+        </div>
+        <div class="mb-3">
+            <button type="submit" class="btn btn-primary" [disabled]="addblogpostForm.invalid">Submit</button>
+        </div>
+    </form>
+</div>

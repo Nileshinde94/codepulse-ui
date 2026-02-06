@@ -71,4 +71,20 @@ export class EditCategory {
     this.categoryservice.updateCategory(id, updateCategoryRequestDto);
   }
 
+  onDeleteCategory() {
+    const id = this.id();
+    if (id) {
+      this.categoryservice.deleteCategory(id).subscribe({
+        next: () => {
+          this.route.navigate(['/admin', 'categories']);
+          alert('Category deleted successfully.');
+          
+        },
+        error: (error) => {
+          alert('Error occurred while deleting category. Please try again.');
+        }
+      });
+    }
+  }
+
 }
