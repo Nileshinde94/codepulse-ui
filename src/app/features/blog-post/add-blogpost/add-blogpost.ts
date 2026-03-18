@@ -1,59 +1,58 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { BlogpostService } from '../service/blogpost-service';
+import { AddBlogPostRequest } from '../Models/blogpost.models';
+import { MarkdownComponent } from 'ngx-markdown';
 
 @Component({
   selector: 'app-add-blogpost',
-  imports: [ReactiveFormsModule],
+  standalone: true,
+  imports: [ReactiveFormsModule,MarkdownComponent],
   templateUrl: './add-blogpost.html',
-  styleUrl: './add-blogpost.css',
 })
 export class AddBlogpost {
 
-  addblogpostForm = new FormGroup({
-    title: new FormControl<string>('', {
-      nonNullable: true,
-      validators: [Validators.required, Validators.minLength(10), Validators.maxLength(100)],
+  private blogpostService = inject(BlogpostService);
+  private router = inject(Router);
 
-    }),
-    shortDescription: new FormControl<string>('', {
-      nonNullable: true,
-      validators: [Validators.required, Validators.minLength(10), Validators.maxLength(300)],
-
-    }),
-    content: new FormControl<string>('', {
-      nonNullable: true,
-      validators: [Validators.required, Validators.minLength(10)],
-
-    }),
-    featuredImageUrl: new FormControl<string>('', {
-      nonNullable: true,
-      validators: [Validators.required, Validators.minLength(1), Validators.maxLength(200)],
-
-    }),
-    urlHandle: new FormControl<string>('', {
-      nonNullable: true,
-      validators: [Validators.required, Validators.minLength(1), Validators.maxLength(200)],
-
-    }),
-    publishDate: new FormControl<string>(new Date().toISOString().split('T')[0], {
-      nonNullable: true,
-      validators: [Validators.required, Validators.minLength(1), Validators.maxLength(200)],
-
-    }),
-    author: new FormControl<string>('', {
-      nonNullable: true,
-      validators: [Validators.required, Validators.maxLength(100)],
-
-    }),
-    isVisible: new FormControl<boolean>(true, {
-      nonNullable: false,
-    }),
-
-
+  addBlogPostForm = new FormGroup({
+    title: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
+    shortDescription: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
+    content: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
+    featuredImageUrl: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
+    urlHandle: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
+    publishedDate: new FormControl(
+      new Date().toISOString().split('T')[0],
+      { nonNullable: true, validators: [Validators.required] }
+    ),
+    author: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
+    isVisible: new FormControl(true, { nonNullable: true }),
   });
 
-  OnSubmit(): void {
-    console.log(this.addblogpostForm.value);
-  }
+  onSubmit(): void {
+    const formValue = this.addBlogPostForm.getRawValue();
 
+    const blogPostData: AddBlogPostRequest = {
+      title: formValue.title,
+      shortDescription: formValue.shortDescription,
+      content: formValue.content,
+      featuredImageUrl: formValue.featuredImageUrl,
+      urlHandle: formValue.urlHandle,
+      author: formValue.author,
+      publishedDate: new Date(formValue.publishedDate),
+      isVisible: formValue.isVisible,
+    };
+
+    this.blogpostService.createBlogPost(blogPostData).subscribe({
+      next: () => {
+        this.addBlogPostForm.reset();
+        this.router.navigate(['/admin/blogposts']);
+      },
+      error: (err) => console.error(err),
+    });
+
+    // create edit method and navigate to edit page after creating the blog post
+    
+  }
 }

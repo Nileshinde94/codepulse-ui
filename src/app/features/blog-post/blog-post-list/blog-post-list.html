@@ -1,7 +1,67 @@
 <div class="container">
-    <h1 class="mt-3">Blog Posts List</h1>
-    <div class="d-flex justify-content-end mt-3">
-        <a routerLink="/admin/blogposts/create" class="btn btn-success">Create New Blog Post</a>
-    </div>
-       
+  <h1 class="mt-3">Blog Posts List</h1>
+
+  <div class="d-flex justify-content-end mt-3">
+    <a routerLink="/admin/blogposts/create" class="btn btn-success">
+      Create New Blog Post
+    </a>
+  </div>
+
+  <div class="mt-3">
+
+    @if (isloading()) {
+      <p>Loading...</p>
+    }
+
+    @else if (error()) {
+      <p class="text-danger">Error: this page getting error</p>
+    }
+
+    @else if (response()) {
+
+      <table class="table table-bordered table-striped">
+        <thead>
+          <tr>
+            <th>Image</th>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Visible</th>
+            <th>Categories</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          @for (blogpost of response(); track blogpost.id) {
+            <tr>
+              <td>{{ blogpost.featuredImageUrl }}</td>
+
+              <td>{{ blogpost.title }}</td>
+
+              <td>{{ blogpost.author }}</td>
+
+              <td>
+                {{ blogpost.isvisible ? 'Yes' : 'No' }}
+              </td>
+              <td>@for( category of blogpost.categories; track category.id)
+                {
+                  <span class="badge bg-secondary">{{ category.name }}</span>
+                }
+              </td>
+              <td>
+                <a
+                  [routerLink]="['/admin/blogposts/edit', blogpost.id]"
+                  class="btn btn-primary btn-sm"
+                >
+                  Edit
+                </a>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+
+    }
+
+  </div>
 </div>
